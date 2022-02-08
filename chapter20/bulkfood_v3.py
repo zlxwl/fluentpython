@@ -1,0 +1,33 @@
+# -*- coding: utf-8 -*-
+# @Time    : 2022/1/18 上午11:22
+# @Author  : Zhong Lei
+# @FileName: bulkfoot_v3.py
+
+
+class Quantity:
+    def __init__(self, storage_name):
+        self.storage_name = storage_name
+
+    def __set__(self, instance, value):
+        if value > 0:
+            instance.__dict__[self.storage_name] = value
+        else:
+            raise ValueError('value must be > 0')
+
+
+class LineItem:
+    weight = Quantity('weight')
+    price = Quantity('price')
+
+    def __init__(self, description, weight, price):
+        self.description = description
+        self.weight = weight
+        self.price = price
+
+    def subtotal(self):
+        return self.price * self.weight
+
+
+if __name__ == '__main__':
+    LineItem('apple', 1, 10)
+    LineItem('banana', -10, 11)
