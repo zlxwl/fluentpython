@@ -55,14 +55,15 @@ class Managed:
 
 if __name__ == '__main__':
     obj = Managed()
-    # print(obj.over)
-    # print(Managed.over)
-    # obj.over = 7
-    # obj.over
-    # obj.__dict__['over'] = 8
-    # print(vars(obj))
-    # obj.over
-    # print(vars(obj))
+    obj.over
+    Managed.over
+    obj.over = 7
+    obj.over
+
+    obj.__dict__['over'] = 8
+    print(vars(obj))
+    obj.over
+    print(vars(obj))
 
     # 20-10
     # obj.over_no_get
@@ -91,9 +92,9 @@ if __name__ == '__main__':
     # print(obj.over, obj.over_no_get, obj.non_over)
 
     # 20-13
-    obj = Managed()
-    print(obj.spam)
-    print(Managed.spam)
-    obj.spam = 7
-    print(obj.spam)
+    # obj = Managed()
+    # print(obj.spam)
+    # print(Managed.spam)
+    # obj.spam = 7
+    # print(obj.spam)
 
