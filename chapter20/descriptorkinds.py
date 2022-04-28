@@ -49,40 +49,42 @@ class Managed:
     over_no_get = OverridingNoGet()
     non_over = NonOveriding()
 
-    def spam(self):
+    def spam(self, x, y):
+        print('spam')
         print('-> managed.spam({})'.format(display(self)))
+        print(x + y)
 
 
 if __name__ == '__main__':
     obj = Managed()
-    obj.over
-    Managed.over
-    obj.over = 7
-    obj.over
-
-    obj.__dict__['over'] = 8
-    print(vars(obj))
-    obj.over
-    print(vars(obj))
+    # obj.over
+    # Managed.over
+    # obj.over = 7
+    # obj.over
+    #
+    # obj.__dict__['over'] = 8
+    # print(vars(obj))
+    # obj.over
+    # print(vars(obj))
 
     # 20-10
     # obj.over_no_get
-    # print(Managed.over_no_get)
+    # Managed.over_no_get
     # obj.over_no_get = 7
-    # print(obj.over_no_get)
+    # obj.over_no_get
     # obj.__dict__['over_no_get'] = 9
     # print(obj.over_no_get)
     # obj.over_no_get = 7
     # print(obj.over_no_get)
 
     # 20-11
-    # obj = Managed()
-    # obj.non_over
-    # obj.non_over = 7
-    # print(obj.non_over)
-    # Managed.non_over
-    # del obj.non_over
-    # obj.non_over
+    obj = Managed()
+    obj.non_over
+    obj.non_over = 7
+    print(obj.non_over)
+    Managed.non_over
+    del obj.non_over
+    obj.non_over
 
     # 20-12
     # obj = Managed()
@@ -97,4 +99,10 @@ if __name__ == '__main__':
     # print(Managed.spam)
     # obj.spam = 7
     # print(obj.spam)
+
+    # # bound_method, obj.spam
+    # bound_method = Managed.spam.__get__(obj)
+    # print(bound_method.__func__.__call__(bound_method.__self__, 3, 4))
+    # print(obj.spam(3, 4))
+
 
