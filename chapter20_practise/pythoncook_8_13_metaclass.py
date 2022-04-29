@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
-# @Time    : 2022/4/28 下午5:15
+# @Time    : 2022/4/29 下午3:14
 # @Author  : Zhong Lei
-# @FileName: pythoncook_8_13.py
+# @FileName: pythoncook_8_13_metaclass.py
 
 
 class Descriptor:
@@ -43,7 +43,7 @@ class MaxSized(Descriptor):
 
     def __set__(self, instance, value):
         if len(value) >= self.size:
-            raise ValueError('name size must be <0')
+            raise ValueError('name size must be < {}'.format(self.size))
         super().__set__(instance, value)
 
 
@@ -71,10 +71,19 @@ class MaxSizedString(String, MaxSized):
     pass
 
 
-class Stock:
-    name = MaxSizedString('name', size=8)
-    shares = UnsignedInteger('shares')
-    price = UnsignedFloat('price')
+class CheckMeta(type):
+    def __new__(cls, clsname, bases, methods):
+        for key, value in methods.items():
+            if isinstance(value, Descriptor):
+                value.name = key
+                setattr(cls, key, value)
+            return type.__new__(cls, clsname, bases, methods)
+
+
+class Stock(metaclass=CheckMeta):
+    name = MaxSizedString(size=8)
+    shares = UnsignedInteger()
+    price = UnsignedFloat()
 
     def __init__(self, name, shares, price):
         self.name = name
@@ -83,5 +92,5 @@ class Stock:
 
 
 if __name__ == '__main__':
-    s = Stock('apple', 50, 100.0)
-    s.name = 'aaaaaaaaaaaaaaaaa'
+    s = Stock('apple', 100, 15.0)
+    s.price = -1530.0
