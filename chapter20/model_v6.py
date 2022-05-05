@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
-# @Time    : 2022/1/18 下午6:47
+# @Time    : 2022/5/5 下午4:31
 # @Author  : Zhong Lei
-# @FileName: model_v5.py
+# @FileName: model_v6.py
 import abc
+from collections import OrderedDict
 
 
 class AutoStorage:
@@ -51,22 +52,24 @@ class NonBlank(Validated):
         return value
 
 
-def entity(cls):
-    for key, value in cls.__dict__.items():
-        if isinstance(value, Validated):
-            name = type(value).__name__
-            value.storage_name = '_{}#{}'.format(name, key)
-    return cls
+class MetaEntity(type):
+    @classmethod
+    def __prepare__(metacls, name, bases):
+        return OrderedDict()
 
-
-class EntityMeta(type):
     def __init__(cls, name, bases, attrs):
         super().__init__(name, bases, attrs)
+        cls._fields = []
         for key, value in attrs.items():
             if isinstance(value, Validated):
                 type_name = type(value).__name__
-                value.storage_name = '_{}#{}'.format(type_name, key)
+                storage_name = '_{}#{}'.format(type_name, key)
+                setattr(cls, storage_name, value)
+                cls._fields.append(key)
 
 
-class Entity(metaclass=EntityMeta):
-    pass
+class Entity(metaclass=MetaEntity):
+    @classmethod
+    def field_names(cls):
+        for name in cls._fields:
+            yield name
